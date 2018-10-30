@@ -7,6 +7,8 @@ void menuPrincipal(void);
 void menuPecas(void);
 void escreverAssentos(char[]);
 int converter(char[], int);
+void selecionarSessao(char[]);
+const char* filePath = "C:\\Users\\alana.sasse\\Documents\\Alana\\PIM\\IngressoC\\";
 
 //Esse e o menu principal do programa com todas as opcoes disponiveis
 void menuPrincipal()
@@ -55,7 +57,7 @@ void menuPecas()
     FILE *fptr;
 	char *sessoes[1000];
 	
-    if ((fptr = fopen("D:\\PIM4\\test.txt", "r")) == NULL)
+    if ((fptr = fopen("C:\\Users\\alana.sasse\\Documents\\Alana\\PIM\\IngressoC\\test.txt", "r")) == NULL)
     {
         printf("Error! opening file");
         // Program exits if file pointer returns NULL.
@@ -69,8 +71,8 @@ void menuPecas()
      for (peca = 0; peca < quantidadeTeatral; peca++)
     {
     	char nome[1000];
-	    sessoes[peca] = malloc(quantidadeTeatral);
-    	fscanf(fptr,"%s %s", nome, sessoes[peca]);
+	    sessoes[peca] = malloc(sizeof(char) * 1024);
+	    fscanf(fptr,"%s %s", nome, sessoes[peca]);
     	//Faz um replace na string
     	size_t tamanho = 0;
     	tamanho = strlen(nome);
@@ -104,39 +106,45 @@ void menuPecas()
 	    char str2[50];
 	    char cat[100];
 	
-	    sprintf(str1,"D:\\PIM4\\");
+	    sprintf(str1,filePath);
 	    sprintf(str2,sessoes[sessao-1]);
 	    sprintf(cat,"%s%s",str1, str2);
-
-		 /*Abrir arquivo das informacoes das sessoes da peca escolhida*/
-		 if ((fptr = fopen(cat, "r")) == NULL)
-	    {
-	        printf("Error! opening file");
-	        // Program exits if file pointer returns NULL.
-	        exit(1);         
-	    }
-	    int quantidadeSessoes;
-	    char data[100];
-	    char hora[100];
-	    char *cadeiras[1000];
-	    fscanf(fptr,"%d", &quantidadeSessoes);
-	    
-	    printf("Selecione uma sessao:\n");
-	    
-	    int aux;
-	    for(aux = 0; aux < quantidadeSessoes; aux++)
-	    {
-	    	cadeiras[aux] = malloc(quantidadeSessoes);
-			fscanf(fptr,"%s %s %s", data, hora, cadeiras[aux]);	    	
-	    	printf("%d - Data: %s Hora: %s\n", aux+1,data, hora);
-		}
-		
-		fclose(fptr);
-		int sessaoEscolhida;
-		scanf("%d", &sessaoEscolhida);
-		escreverAssentos(cadeiras[sessaoEscolhida-1]);
-	    	    
+		//Rotina para selecionar as sessoes	 
+	    selecionarSessao(cat);	    
 	}
+}
+
+void selecionarSessao(char sessio[])
+{
+
+	FILE *fptr;
+	/*Abrir arquivo das informacoes das sessoes da peca escolhida*/
+	 if ((fptr = fopen(sessio, "r")) == NULL)
+    {
+        printf("Error! opening file");
+        // Program exits if file pointer returns NULL.
+        exit(1);         
+    }
+    int quantidadeSessoes;
+    char data[100];
+    char hora[100];
+    char *cadeiras[1000];
+    fscanf(fptr,"%d", &quantidadeSessoes);
+    
+    printf("Selecione uma sessao:\n");
+    
+    int aux;
+    for(aux = 0; aux < quantidadeSessoes; aux++)
+    {
+    	cadeiras[aux] = malloc(sizeof(char) * 1024);
+		fscanf(fptr,"%s %s %s", data, hora, cadeiras[aux]);	    	
+    	printf("%d - Data: %s Hora: %s\n", aux+1,data, hora);
+	}
+	
+	fclose(fptr);
+	int sessaoEscolhida;
+	scanf("%d", &sessaoEscolhida);
+	escreverAssentos(cadeiras[sessaoEscolhida-1]);
 }
 	
 	void escreverAssentos(char arquivo[])
@@ -145,7 +153,7 @@ void menuPecas()
 	    char str2[50];
 	    char cat[100];
 	
-	    sprintf(str1,"D:\\PIM4\\");
+	    sprintf(str1,filePath);
 	    sprintf(str2,arquivo);
 	    sprintf(cat,"%s%s",str1, str2);
 	    
