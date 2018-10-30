@@ -55,7 +55,7 @@ void menuPecas()
     FILE *fptr;
 	char *sessoes[1000];
 	
-    if ((fptr = fopen("D:\\PIM 4\\test.txt", "r")) == NULL)
+    if ((fptr = fopen("D:\\PIM4\\test.txt", "r")) == NULL)
     {
         printf("Error! opening file");
         // Program exits if file pointer returns NULL.
@@ -104,7 +104,7 @@ void menuPecas()
 	    char str2[50];
 	    char cat[100];
 	
-	    sprintf(str1,"D:\\PIM 4\\");
+	    sprintf(str1,"D:\\PIM4\\");
 	    sprintf(str2,sessoes[sessao-1]);
 	    sprintf(cat,"%s%s",str1, str2);
 
@@ -145,7 +145,7 @@ void menuPecas()
 	    char str2[50];
 	    char cat[100];
 	
-	    sprintf(str1,"D:\\PIM 4\\");
+	    sprintf(str1,"D:\\PIM4\\");
 	    sprintf(str2,arquivo);
 	    sprintf(cat,"%s%s",str1, str2);
 	    
