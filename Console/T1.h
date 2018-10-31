@@ -8,7 +8,9 @@ void menuPecas(void);
 void escreverAssentos(char[]);
 int converter(char[], int);
 void selecionarSessao(char[]);
-const char* filePath = "C:\\Users\\alana.sasse\\Documents\\Alana\\PIM\\IngressoC\\";
+//Caminho relativo
+const char* filePath = "../";
+//Criar variaveis globais data, hora, nome da peca e numero do assento
 
 //Esse e o menu principal do programa com todas as opcoes disponiveis
 void menuPrincipal()
@@ -57,7 +59,7 @@ void menuPecas()
     FILE *fptr;
 	char *sessoes[1000];
 	
-    if ((fptr = fopen("C:\\Users\\alana.sasse\\Documents\\Alana\\PIM\\IngressoC\\test.txt", "r")) == NULL)
+    if ((fptr = fopen("../test.txt", "r")) == NULL)
     {
         printf("Error! opening file");
         // Program exits if file pointer returns NULL.
@@ -140,138 +142,164 @@ void selecionarSessao(char sessio[])
 		fscanf(fptr,"%s %s %s", data, hora, cadeiras[aux]);	    	
     	printf("%d - Data: %s Hora: %s\n", aux+1,data, hora);
 	}
-	
+	printf("0 - Voltar\n\n");
 	fclose(fptr);
 	int sessaoEscolhida;
 	scanf("%d", &sessaoEscolhida);
-	escreverAssentos(cadeiras[sessaoEscolhida-1]);
+	//Validar entrada do Usuario
+	 while(sessaoEscolhida < 0 || sessaoEscolhida > quantidadeSessoes)
+	{
+		printf("Opção invalida! Digite novamente: \n");
+		scanf("%d", &sessaoEscolhida);
+	}
+	if(sessaoEscolhida == 0)
+	{
+		menuPecas();
+	}
+	else
+	{
+		escreverAssentos(cadeiras[sessaoEscolhida-1]);    
+	}
+	
 }
 	
-	void escreverAssentos(char arquivo[])
-	{
-		char str1[50];
-	    char str2[50];
-	    char cat[100];
+void escreverAssentos(char arquivo[])
+{
+	char str1[50];
+	char str2[50];
+	char cat[100];
 	
-	    sprintf(str1,filePath);
-	    sprintf(str2,arquivo);
-	    sprintf(cat,"%s%s",str1, str2);
-	    
-		FILE *fptr;
-		if ((fptr = fopen(cat, "r+")) == NULL)
-	    {
-	        printf("Error! opening file");
-	        // Program exits if file pointer returns NULL.
-	        exit(1);         
-	    }
-	    printf("Selecione um assento: \n\n");
-	    
-	    int fileiras, colunas;
-	    fscanf(fptr,"%d %d", &fileiras, &colunas);
-	    int linha, cadeira;
-	    int assentos[fileiras][colunas];
-	    int teste;
-	    char helper;
-	    int assentosDisponiveis = 0;
-	    //Contar quantos assentos disponiveis tem
-	    //Se não houver assento disponivel, avisar o usuário e
-	    //voltar para o menu anterior e selecionar outra sessão
-	    for(linha = 0; linha < fileiras; linha ++)
-	    {
-	    	for(cadeira = 0; cadeira < colunas; cadeira++)
-	    	{
-	    		fscanf(fptr,"%d", &teste);
-	    		assentos[linha][cadeira] = teste;
-	    		
-	    		if(teste == 0)
-	    		{
-	    			assentosDisponiveis ++;
-				}
-				
-	    		helper = 'A' + linha;
-	    		printf("%c%d ", helper,cadeira+1);
+	sprintf(str1,filePath);
+	sprintf(str2,arquivo);
+	sprintf(cat,"%s%s",str1, str2);
+	
+	FILE *fptr;
+	if ((fptr = fopen(cat, "r+")) == NULL)
+	{
+	    printf("Error! opening file");
+	    // Program exits if file pointer returns NULL.
+	    exit(1);         
+	}
+	printf("Selecione um assento: \n\n");
+	
+	int fileiras, colunas;
+	fscanf(fptr,"%d %d", &fileiras, &colunas);
+	int linha, cadeira;
+	int assentos[fileiras][colunas];
+	int teste;
+	char helper;
+	int assentosDisponiveis = 0;
+	//Contar quantos assentos disponiveis tem
+	//Se não houver assento disponivel, avisar o usuário e
+	//voltar para o menu anterior e selecionar outra sessão
+	for(linha = 0; linha < fileiras; linha ++)
+	{
+		for(cadeira = 0; cadeira < colunas; cadeira++)
+		{
+			fscanf(fptr,"%d", &teste);
+			assentos[linha][cadeira] = teste;
+			
+			if(teste == 0)
+			{
+				assentosDisponiveis ++;
 			}
-			printf("\n");
+			
+			helper = 'A' + linha;
+			printf("%c%d ", helper,cadeira+1);
 		}
-		printf("0 - Voltar\n\n");
-		
-		if(assentosDisponiveis == 0)
-		{
-			//Voltar a seleção de sessao
-		}
-		else
-		{
-			//Oferecer opção de ir para a home
+		printf("\n");
+	}
+	printf("\n0 - Voltar\n\n");
+	
+	if(assentosDisponiveis == 0)
+	{
+		//Voltar a seleção de sessao
+		printf("Nao existe assentos disponiveis para essa sessao. Por favor escolha outra sessao: \n\n");
+		menuPecas();
+	}
+	else
+	{
+		//Oferecer opção de ir para a home
 		char assentoEscolhido[2];
 		printf("\n");
 		scanf("%s", assentoEscolhido);
-		int row, column;
-		row = converter(assentoEscolhido, 0);
-		column = converter(assentoEscolhido, 1);
-		
-		int t = 0;
-			
-		while(t == 0)
+	
+		if(assentoEscolhido[0] == '0')
 		{
-			if(row+1 < 1 || row+1 > fileiras || column < 1 || column > cadeira)
+			//Voltar ao menu anterior -- working on it!
+			menuPecas();
+		}
+		else
+		{
+			int row, column;
+			row = converter(assentoEscolhido, 0);
+			column = converter(assentoEscolhido, 1);
+		
+			int t = 0;
+				
+			while(t == 0)
 			{
-				printf("Assento inválido! Digite novamente: \n");
-				scanf("%s", assentoEscolhido);
-				row = converter(assentoEscolhido, 0);
-				column = converter(assentoEscolhido, 1);
+				if(row+1 < 1 || row+1 > fileiras || column < 1 || column > cadeira)
+				{
+					printf("Assento inválido! Digite novamente: \n");
+					scanf("%s", assentoEscolhido);
+					row = converter(assentoEscolhido, 0);
+					column = converter(assentoEscolhido, 1);
+				}
+				//Verifica se o assento esta disponivel
+				else if (assentos[row][column-1]==1)
+				{
+					printf("Assento indisponível! Por favor escolha outro assento: \n");
+					scanf("%s", assentoEscolhido);
+					row = converter(assentoEscolhido, 0);
+					column = converter(assentoEscolhido, 1);	
+				}
+				else
+				{
+					assentos[row][column-1] = 1;
+					t=1;
+				}
 			}
-			//Verifica se o assento esta disponivel
-			else if (assentos[row][column-1]==1)
-			{
-				printf("Assento indisponível! Por favor escolha outro assento: \n");
-				scanf("%s", assentoEscolhido);
-				row = converter(assentoEscolhido, 0);
-				column = converter(assentoEscolhido, 1);	
+			
+			//Atualizar o arquivo de assentos
+			//Volta para o começo do arquivo
+			fseek(fptr, 0, SEEK_SET);
+			fprintf(fptr, "%d ", fileiras);
+			fprintf(fptr, "%d", colunas);
+			
+			//Percorre a matriz e escreve no arquivo, atualizando os assentos
+			for(linha = 0; linha < fileiras; linha ++)
+		    {
+		    	//Proxima linha
+		    	fprintf(fptr, "%c", '\n');
+		    	for(cadeira = 0; cadeira < colunas; cadeira++)
+		    	{
+		    		fprintf(fptr, "%d ", assentos[linha][cadeira]);
+				}
 			}
-			else
-			{
-				assentos[row][column-1] = 1;
-				t=1;
-			}
+			
+			//Selecionar o valor do ingresso (o programa não irá validar)
+			//Decidir se os preços irao variar por peça de teatro, se sim montar um array de struct do tipo preço, ou um array
 		}
 	
-		//Atualizar o arquivo de assentos
-		//Volta para o começo do arquivo
-		fseek(fptr, 0, SEEK_SET);
-		fprintf(fptr, "%d ", fileiras);
-		fprintf(fptr, "%d", colunas);
-		
-		//Percorre a matriz e escreve no arquivo, atualizando os assentos
-		for(linha = 0; linha < fileiras; linha ++)
-	    {
-	    	//Proxima linha
-	    	fprintf(fptr, "%c", '\n');
-	    	for(cadeira = 0; cadeira < colunas; cadeira++)
-	    	{
-	    		fprintf(fptr, "%d ", assentos[linha][cadeira]);
-			}
-		}
-		
-		//Selecionar o valor do ingresso (o programa não irá validar)
-		//Decidir se os preços irao variar por peça de teatro, se sim montar um array de struct do tipo preço, ou um array
-		}
-		fclose(fptr);
-		
-		printf("Selecione o tipo de ingresso:\n\n");
-		printf("1 - Inteira\n");
-		printf("2 - Meia\n");
-		printf("3 - Terca aluno escola publica \n");
-		int tipoIngresso;
-		scanf("%d", &tipoIngresso);
-		}
-		
-	int converter(char t[], int linha)
-	{
-		if(linha == 0)
-			return t[0] - 'A';
-		else if(linha == 1)
-			return t[1] - '0';
 	}
+	fclose(fptr);
+	
+	printf("Selecione o tipo de ingresso:\n\n");
+	printf("1 - Inteira\n");
+	printf("2 - Meia\n");
+	printf("3 - Terca aluno escola publica \n");
+	int tipoIngresso;
+	scanf("%d", &tipoIngresso);
+}
+		
+int converter(char t[], int linha)
+{
+	if(linha == 0)
+		return t[0] - 'A';
+	else if(linha == 1)
+		return t[1] - '0';
+}
 
 
 
