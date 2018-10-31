@@ -11,6 +11,7 @@ void selecionarSessao(char[]);
 //Caminho relativo
 const char* filePath = "../";
 //Criar variaveis globais data, hora, nome da peca e numero do assento
+enum week{Segunda = 1, Terca, Quarta, Quinta, Sexta, Sabado, Domingo};
 
 //Esse e o menu principal do programa com todas as opcoes disponiveis
 void menuPrincipal()
@@ -139,7 +140,8 @@ void selecionarSessao(char sessio[])
     for(aux = 0; aux < quantidadeSessoes; aux++)
     {
     	cadeiras[aux] = malloc(sizeof(char) * 1024);
-		fscanf(fptr,"%s %s %s", data, hora, cadeiras[aux]);	    	
+		fscanf(fptr,"%s %s %s", data, hora, cadeiras[aux]);
+		//Separar a data em dia, mes e ano e descobrir qual o dia da semana	    	
     	printf("%d - Data: %s Hora: %s\n", aux+1,data, hora);
 	}
 	printf("0 - Voltar\n\n");
@@ -300,6 +302,13 @@ int converter(char t[], int linha)
 	else if(linha == 1)
 		return t[1] - '0';
 }
+
+int dayofweek(int d, int m, int y) 
+{ 
+    static int t[] = { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 }; 
+    y -= m < 3; 
+    return ( y + y/4 - y/100 + y/400 + t[m-1] + d) % 7; 
+} 
 
 
 

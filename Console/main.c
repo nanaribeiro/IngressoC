@@ -34,4 +34,11 @@ int main(int argc, char *argv[])
 	printf("Ingressos Theather\n");
 	//rotina principal
 	menuPrincipal();
+	//Como saber qual o dia da semana dada uma data
+	int day = dayofweek(30, 10, 2018); 
+    printf ("%d", day);
+	
 }
+
+  
+
