@@ -1,5 +1,5 @@
 4
-25/10/2018 20:00 alice-sessao1-assentos.txt
-28/10/2018 19:00 alice-sessao2-assentos.txt
-29/10/2018 21:00 alice-sessao3-assentos.txt
-01/11/2018 22:00 alice-sessao4-assentos.txt
+16:00 alice-sessao1-assentos.txt 8  
+19:00 alice-sessao2-assentos.txt 12
+21:00 alice-sessao3-assentos.txt 15
+22:00 alice-sessao4-assentos.txt 15

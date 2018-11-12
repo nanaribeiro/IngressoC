@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h> // For exit() function
+#include <time.h>
 
 //declarando as funcoes
 void menuPrincipal(void);
@@ -12,6 +13,10 @@ void selecionarSessao(char[]);
 const char* filePath = "../";
 //Criar variaveis globais data, hora, nome da peca e numero do assento
 enum week{Segunda = 1, Terca, Quarta, Quinta, Sexta, Sabado, Domingo};
+int meiaEntrada;
+char horaTicket[1000];
+int valorTicket;
+char nomeDaPeca[1000];
 
 //Esse e o menu principal do programa com todas as opcoes disponiveis
 void menuPrincipal()
@@ -39,12 +44,62 @@ void menuPrincipal()
 	else if(opcao == 1)
 	{
 		//Chamar rotina de compra de ingresso
-		menuPecas();		
+		tipoUsuario();		
 	}
 	else if(opcao == 2)
 	{
 		//chamar rotina para fechar o caixa
 	}
+}
+/*Rotina para escolher o tipo de usuario*/
+void tipoUsuario()
+{
+	//Opcao escolhida pelo usuario
+	int usuario;
+	
+	printf("\nEscolha o tipo de usuário: \n");
+	printf("1 - Estudante\n");
+	printf("2 - Criança de 02 a 12 anos\n");
+	printf("3 - Adulto com idade igual ou superior a 60 anos\n");
+	printf("4 - Professor da rede publica\n");
+	printf("5 - Outro\n");
+	
+	//Como saber qual o dia atual
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	int dia = dayofweek(tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+	
+	if(dia == Terca)
+	{
+		printf("6 - Estudante de baixa renda da rede pública\n");
+	}
+	printf("\n");
+
+	scanf("%d", &usuario);
+	//Condicional do menu principal
+	while(usuario != 3 && usuario != 1 && usuario != 2 && usuario != 4 && usuario != 5 && usuario!=6)
+	{
+		printf("Opção invalida! Digite novamente: \n");
+		scanf("%d", &usuario);
+	}
+	//Pode trocar o if por um switch
+	//Menu principal, passar para uma rotina, vai poder voltar nele
+	switch(usuario)
+	{
+		case 1: case 2: case 3: case 4:
+			meiaEntrada = 1;
+			break;
+		
+		case 5:
+			meiaEntrada = 0;
+			break;
+		
+		case 6:
+			meiaEntrada = 2;
+			break;
+	}
+	
+	menuPecas();
 }
 /*Rotina que faz o gerenciamento da compra do ingresso, lendo os arquivos com as informacoes
 No arquivo principal tem as informacoes das pecas em cartaz
@@ -59,6 +114,7 @@ void menuPecas()
     int peca = 0;
     FILE *fptr;
 	char *sessoes[1000];
+	char *nome[1000];
 	
     if ((fptr = fopen("../test.txt", "r")) == NULL)
     {
@@ -73,21 +129,21 @@ void menuPecas()
     printf("Escolha uma peca de teatro : \n\n");
      for (peca = 0; peca < quantidadeTeatral; peca++)
     {
-    	char nome[1000];
+    	nome[peca] = malloc(sizeof(char) * 1024)	;
 	    sessoes[peca] = malloc(sizeof(char) * 1024);
-	    fscanf(fptr,"%s %s", nome, sessoes[peca]);
+	    fscanf(fptr,"%s %s", nome[peca], sessoes[peca]);
     	//Faz um replace na string
     	size_t tamanho = 0;
-    	tamanho = strlen(nome);
+    	tamanho = strlen(nome[peca]);
     	int replace = 0;
     	for(replace = 0; replace < tamanho; replace++)
 		{
-    		if(nome[replace] == '-')
+    		if(nome[peca][replace] == '-')
     		{
-    			nome[replace] = ' ';
+    			nome[peca][replace] = ' ';
 			}
 		}
-    	printf("%d - %s\n", peca+1, nome);
+    	printf("%d - %s\n", peca+1, nome[peca]);
     }
 
     fclose(fptr);
@@ -105,6 +161,7 @@ void menuPecas()
 	}
 	else
 	{
+		sprintf(nomeDaPeca, nome[sessao-1]);
 		char str1[50];
 	    char str2[50];
 	    char cat[100];
@@ -129,20 +186,20 @@ void selecionarSessao(char sessio[])
         exit(1);         
     }
     int quantidadeSessoes;
-    char data[100];
-    char hora[100];
+    char *hora[1000];
     char *cadeiras[1000];
     fscanf(fptr,"%d", &quantidadeSessoes);
-    
+    int valor[quantidadeSessoes];
     printf("Selecione uma sessao:\n");
     
     int aux;
     for(aux = 0; aux < quantidadeSessoes; aux++)
     {
     	cadeiras[aux] = malloc(sizeof(char) * 1024);
-		fscanf(fptr,"%s %s %s", data, hora, cadeiras[aux]);
+    	hora[aux] = malloc(sizeof(char) * 1024);
+		fscanf(fptr,"%s %s %d", hora[aux], cadeiras[aux], &valor[aux]);
 		//Separar a data em dia, mes e ano e descobrir qual o dia da semana	    	
-    	printf("%d - Data: %s Hora: %s\n", aux+1,data, hora);
+    	printf("%d - Hora: %s\n", aux+1,hora[aux]);
 	}
 	printf("0 - Voltar\n\n");
 	fclose(fptr);
@@ -160,6 +217,8 @@ void selecionarSessao(char sessio[])
 	}
 	else
 	{
+		sprintf(horaTicket,hora[sessaoEscolhida-1]);
+		valorTicket = valor[sessaoEscolhida-1];
 		escreverAssentos(cadeiras[sessaoEscolhida-1]);    
 	}
 	
