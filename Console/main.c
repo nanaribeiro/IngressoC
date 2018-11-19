@@ -3,7 +3,7 @@
 #include <string.h>
 #include <locale.h>
 #include <time.h>
-#include "T1.h"
+#include "Regras.h"
 
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
@@ -35,9 +35,6 @@ int main(int argc, char *argv[])
 	printf("Ingressos Theather\n");
 	//rotina principal
 	menuPrincipal();
-	//Como saber qual o dia da semana dada uma data
-	int day = dayofweek(30, 10, 2018); 
-    printf ("%d", day);
 	
 }
 

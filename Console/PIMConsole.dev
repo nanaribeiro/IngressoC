@@ -61,7 +61,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=T1.h
+FileName=Regras.h
 CompileCpp=0
 Folder=
 Compile=1
