@@ -1,0 +1,4 @@
+3
+18:00 moana-sessao1-assentos.txt 20
+20:00 moana-sessao2-assentos.txt 25
+22:00 moana-sessao3-assentos.txt 25
